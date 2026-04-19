@@ -9,8 +9,7 @@ library(r5r)
 
 core <- r5r::build_network("data/subway_r5r_stuff/")
 public_spaces <- read.csv("data/nyc-public-space.csv")
-
-subway <- tidytransit::read_gtfs("gtfs_subway.zip")
+public_spaces_geo <- read_sf("data/nyc-public-space.geojson")
 nyc_map <- nycgeo::nyc_boundaries("tract")
 
 st_crs(nyc_map) <- st_crs(2263)
@@ -48,7 +47,7 @@ tt <- travel_time_matrix(
   destinations = destinations,
   mode = c("WALK"),
   departure_datetime = as.POSIXct("2026-03-01 08:00:00"),
-  max_trip_duration = 60
+  max_trip_duration = 30
 )
 
 res <- public_spaces %>%
@@ -59,7 +58,6 @@ res <- public_spaces %>%
     reachable_30 = travel_time_p50 <= 30
   ) %>%
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
-
 
 
 

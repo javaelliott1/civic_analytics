@@ -8,7 +8,6 @@ options(java.parameters = '-Xmx10G')
 library(r5r)
 
 core <- r5r::build_network("data/subway_r5r_stuff/")
-public_spaces_geo <- read_sf("data/nyc-public-space.geojson")
 public_spaces <- read.csv("data/nyc-public-space.csv")
 nyc_map <- nycgeo::nyc_boundaries("tract")
 
@@ -29,12 +28,11 @@ destinations <- public_spaces %>%
     lat = Y
   )
 
-#sample a tract centroid
-sample_tract <- nyc_centroids |> sample_n(10)
-origin_point <- sample_tract |>
+#use all tract centroids
+origin_points <- nyc_centroids |>
   st_coordinates() %>%
   as.data.frame() %>%
-  bind_cols(sample_tract) %>%
+  bind_cols(nyc_centroids) %>%
   transmute(
     id = geoid,
     lon = X,
@@ -43,11 +41,11 @@ origin_point <- sample_tract |>
 
 tt <- travel_time_matrix(
   core,
-  origins = origin_point,
+  origins = origin_points,
   destinations = destinations,
   mode = c("WALK","TRANSIT"),
   departure_datetime = as.POSIXct("2026-03-01 08:00:00"),
-  max_trip_duration = 60
+  max_trip_duration = 30
 )
 
 res <- public_spaces %>%
@@ -59,20 +57,33 @@ res <- public_spaces %>%
   ) %>%
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
+res |> 
+  ggplot() + 
+  geom_sf(data = nyc_map) +
+  geom_sf(data = res,aes(color=travel_time_p50),size=1) + 
+  theme_void() + 
+  labs(
+    title = "Accessibility of Public Spaces in at most 30 mins"
+  )
+
+# do fill by best tract 
+plots <- lapply(c(10,20,30),function(min){
+  tt |>
+  as.data.frame() |>
+  group_by(from_id) |> 
+  summarise(n_spaces = n(),.groups='drop') |>
+  mutate(max_30 = pmin(n_spaces,min)) |>
+  right_join(nyc_map,by=c('from_id'='geoid')) |>
+  st_as_sf() |>
+  ggplot() +
+  geom_sf(data=nyc_map) + 
+  geom_sf(aes(fill=max_30)) + 
+  scale_fill_gradientn(
+      colors = c("#FF8427", "#FFC800", "#4D8B31"),
+      name = paste0("Nearby Public Spaces 30 Cap")
+    ) + 
+  theme_void()
+})
 
 
-
-ggplot() +
-  geom_sf(data = nyc_map) + 
-  geom_sf(data = public_spaces_geo, alpha = 0.2) +
-  geom_sf(data = res |> filter(reachable_30), color = "#849324", size = 1) +
-  geom_sf(data = res |> filter(reachable_20), color = '#FFB30F', size =1) + 
-  geom_sf(data = res |> filter(reachable_10), color = '#FD151B', size = 1) + 
-  geom_sf(data = sample_tract, color = "#437F97", size = 1) +
-  theme_minimal() +
-  labs(title = "NYC Public Space Accessibility (≤ 30 min)")
-
-
-#proof-of-concept, can do the same things as chris whong's subwaysheds isochrones,
-#but we only care about public spaces.
 
