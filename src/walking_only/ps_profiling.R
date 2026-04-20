@@ -9,7 +9,6 @@ options(java.parameters = '-Xmx10G')
 library(r5r)
 
 core <- r5r::build_network("data/subway_r5r_stuff/")
-public_spaces <- read.csv("data/nyc-public-space.csv")
 
 nyc_map <- nycgeo::nyc_boundaries("tract")
 st_crs(nyc_map) <- st_crs(2263)
