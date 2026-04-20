@@ -19,13 +19,13 @@ parks <- parks %>%
 
 parks |> 
   ggplot() + 
-  geom_sf(data=nyc_map,fill = '#fff2e0') + 
-  geom_sf(fill= '#8BB174') + 
+  geom_sf(data=nyc_map,fill = '#FAEDCA') + 
+  geom_sf(fill= '#7EBC89') + 
   coord_sf(expand = FALSE) +
   theme_void() + 
   theme(
-    plot.background  = element_rect(fill = "#ae936e", color = NA),
-    panel.background = element_rect(fill = "#d7b587", color = NA),
+    plot.background  = element_rect(fill = "#F2C078", color = NA),
+    panel.background = element_rect(fill = "#F2C078", color = NA),
     plot.margin = margin(0,0,0,0),
     plot.title = element_text(color = "white"),
     plot.subtitle = element_text(color = "white")
@@ -35,8 +35,8 @@ parks |>
 p <- parks |> 
   filter(!is.na(ACQUISITIONDATE)) |>
   ggplot() +
-  geom_sf(data=nyc_map,fill='#fff2e0') + 
-  geom_sf(fill = "#479554", color = NA, alpha = 0.8) +
+  geom_sf(data=nyc_map,fill='#FAEDCA') + 
+  geom_sf(fill = "#7EBC89", color = NA, alpha = 0.9) +
   transition_time(floor_date(ACQUISITIONDATE, "year")) +
   shadow_mark(past = TRUE, future = FALSE) +
   labs(
@@ -45,8 +45,8 @@ p <- parks |>
   ) +
   theme_void() + 
   theme(
-    plot.background  = element_rect(fill = "#ae936e", color = NA),
-    panel.background = element_rect(fill = "#d7b587", color = NA),
+    plot.background  = element_rect(fill = "#F2C078", color = NA),
+    panel.background = element_rect(fill = "#F2C078", color = NA),
     plot.margin = margin(0,0,0,0),
     plot.title = element_text(color = "white"),
     plot.subtitle = element_text(color = "white")

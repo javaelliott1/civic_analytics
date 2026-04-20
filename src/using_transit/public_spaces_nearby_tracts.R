@@ -57,14 +57,6 @@ res <- public_spaces %>%
   ) %>%
   st_as_sf(coords = c("longitude", "latitude"), crs = 4326)
 
-res |> 
-  ggplot() + 
-  geom_sf(data = nyc_map) +
-  geom_sf(data = res,aes(color=travel_time_p50),size=1) + 
-  theme_void() + 
-  labs(
-    title = "Accessibility of Public Spaces in at most 30 mins"
-  )
 
 # do fill by best tract 
 plots <- lapply(c(10,20,30),function(min){

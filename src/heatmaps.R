@@ -31,7 +31,8 @@ nyc_map |>
     across(c(demo_white,demo_black,demo_asian,demo_hispanic), ~ .x / demo_total_pop)
   ) |> 
   ggplot() + 
-  geom_sf(aes(fill=scale(demo_median_income)[,1]))
+  geom_sf(aes(fill=scale(demo_median_income)[,1])) + 
+  theme_void()
 
 nyc_map |>
   left_join(

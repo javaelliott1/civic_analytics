@@ -63,14 +63,17 @@ res <- public_spaces %>%
 
 
 ggplot() +
-  geom_sf(data = nyc_map) + 
-  geom_sf(data = public_spaces_geo, alpha = 0.2) +
+  geom_sf(data = nyc_map,fill ='#878999' ) + 
+  geom_sf(data = public_spaces_geo, alpha = 0.2,color='black') +
   geom_sf(data = res |> filter(reachable_30), color = "#849324", size = 1) +
   geom_sf(data = res |> filter(reachable_20), color = '#FFB30F', size =1) + 
   geom_sf(data = res |> filter(reachable_10), color = '#FD151B', size = 1) + 
   geom_sf(data = sample_tract, color = "#437F97", size = 1) +
-  theme_minimal() +
-  labs(title = "NYC Public Space Accessibility (≤ 30 min)")
+  theme_void() + 
+  labs(
+    title = "How Many Spaces Am I Close to?",
+    subtitle = 'Walking + Transit (Bus,Subway) Isochrone-likes'
+  )
 
 
 #proof-of-concept, can do the same things as chris whong's subwaysheds isochrones,

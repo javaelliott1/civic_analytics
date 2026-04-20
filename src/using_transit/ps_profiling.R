@@ -9,6 +9,8 @@ options(java.parameters = '-Xmx10G')
 library(r5r)
 
 core <- r5r::build_network("data/subway_r5r_stuff/")
+public_spaces <- read.csv('data/nyc-public-space.csv')
+public_spaces_geo <- read_sf("data/nyc-public-space.geojson")
 
 nyc_map <- nycgeo::nyc_boundaries("tract")
 st_crs(nyc_map) <- st_crs(2263)
@@ -94,13 +96,14 @@ acs_w_dist |>
     names_to = 'demo',
     values_to ='val'
   ) |> 
-  ggplot(aes(x = val)) + 
+  ggplot(aes(x = val,fill=demo)) + 
   geom_histogram() + 
   facet_wrap(. ~ demo,scales = 'free_x') + 
   theme_minimal() + 
   labs(
     title = "POPs more accessible to white upper-class"
   )
+
 
 #for those accessible to plazas, what do they look like?
 acs_w_dist |> 
@@ -123,10 +126,13 @@ acs_w_dist |>
     names_to = 'demo',
     values_to ='val'
   ) |> 
-  ggplot(aes(x = val)) + 
+  ggplot(aes(x = val,fill=demo)) + 
   geom_histogram() + 
   facet_wrap(. ~ demo,scales = 'free_x') + 
-  theme_minimal()
+  theme_minimal() + 
+  labs(
+    title = "Parks more Accessible to Everyone"
+  )
 
 #for those accessible to stp, what do they look like?
 acs_w_dist |> 
