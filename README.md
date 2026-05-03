@@ -6,7 +6,7 @@ Try the interactive map here: https://javaelliott1.github.io/civic-analytics-map
 
 ---
 
-## A City Full of “Public” Space—But Not Equal Access
+## A City Full of “Public” Space, But Not Equal Access
 
 New York City is dense with parks, plazas, waterfronts, and privately owned public spaces (POPs). On paper, these places are “public.” In practice, access depends heavily on where you live, how you travel, and what surrounds you.
 
